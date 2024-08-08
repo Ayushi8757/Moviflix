@@ -1,17 +1,23 @@
 import React, { useRef, useState } from 'react'
 import Header from './Header'
 import { checkvaliddata } from '../utills/Validate';
-import { getAuth, createUserWithEmailAndPassword,signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword,signInWithEmailAndPassword ,updateProfile} from "firebase/auth";
+import { useNavigate, useNavigation } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { addUser } from '../utills/userSlice';
 
 
 function SigninSignup() {
   const [isSignForm,setIsSignForm]=useState(true);
-  const [errormessage,seterrormessage]=useState(null)
+  const [errormessage,seterrormessage]=useState(null);
+  const navigate=useNavigate();
+  const dispatch=useDispatch
   const togglesigninform=()=>{
     setIsSignForm(!isSignForm);
   }
   const email=useRef(null);
-  const password=useRef(null)
+  const password=useRef(null);
+  const name=useRef(null);
   const handleButtonClick=()=>{
     //validate the form data
     const message=checkvaliddata(email.current.value,password.current.value)
@@ -28,7 +34,21 @@ createUserWithEmailAndPassword(auth,
   .then((userCredential) => {
     // Signed up 
     const user = userCredential.user;
+    const auth = getAuth();
+updateProfile(user, {
+  displayName: name.current.value, photoURL:"https://lh3.googleusercontent.com/a/ACg8ocK406hAMCgBNTTbQlfUV92IU_6M6_ZZb5hsFa8sCQW3JcxAhCN3=s360-c-no"
+}).then(() => {
+  const {uid,email,displayName,photoURL} = auth.currentUser;
+    dispatch(addUser({uid:uid,email:email,displayName:displayName,photoURL:photoURL}))
+  // Profile updated!
+  navigate("/browse");
+}).catch((error) => {
+  // An error occurred
+ seterrormessage(error.message)
+});
+
     console.log(user);
+    
     // ...
   })
   .catch((error) => {
@@ -47,6 +67,7 @@ signInWithEmailAndPassword(auth, email.current.value, password.current.value)
     // Signed in 
     const user = userCredential.user;
     console.log(user);
+    navigate("/browse");
     // ...
   })
   .catch((error) => {
@@ -70,7 +91,8 @@ signInWithEmailAndPassword(auth, email.current.value, password.current.value)
       mr-[500px]  text-white rounded-lg '>
         <h1 className='font-bold text-3xl py-4'>{isSignForm ? "Sign In":"Sign Up"} </h1>
         {!isSignForm && (
-          <input    
+          <input 
+          ref={name}   
           type='text '
           placeholder='Full Name'
           className='p-2 my-4 w-full bg-black outline outline-red-900'/>
