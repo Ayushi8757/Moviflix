@@ -11,7 +11,7 @@ function SigninSignup() {
   const [isSignForm,setIsSignForm]=useState(true);
   const [errormessage,seterrormessage]=useState(null);
   const navigate=useNavigate();
-  const dispatch=useDispatch
+  const dispatch=useDispatch();
   const togglesigninform=()=>{
     setIsSignForm(!isSignForm);
   }
