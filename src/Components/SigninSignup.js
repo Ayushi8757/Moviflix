@@ -5,6 +5,7 @@ import { getAuth, createUserWithEmailAndPassword,signInWithEmailAndPassword ,upd
 import { useNavigate, useNavigation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addUser } from '../utills/userSlice';
+import { background } from '../utills/Constants';
 
 
 function SigninSignup() {
@@ -83,7 +84,7 @@ signInWithEmailAndPassword(auth, email.current.value, password.current.value)
       <Header/>
       <div className='absolute  inset-0 z-0  bg-gradient-to-b from-black'>
         <img 
-         className="w-full h-full object-cover  " src="https://cdn.mos.cms.futurecdn.net/rDJegQJaCyGaYysj2g5XWY-650-80.jpg.webp"
+         className="w-full h-full object-cover  " src={background}
          alt='background'
         />
       </div>
